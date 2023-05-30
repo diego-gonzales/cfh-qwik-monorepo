@@ -5,7 +5,7 @@ export default component$(() => {
   return (
     <>
       <Navbar />
-      <main class="flex flex-col justify-center items-center">
+      <main class="my-4 flex flex-col justify-center items-center">
         <Slot />
       </main>
     </>
