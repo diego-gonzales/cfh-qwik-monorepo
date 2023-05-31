@@ -1,12 +1,11 @@
 import { component$, useSignal, useTask$ } from '@builder.io/qwik';
-import { useNavigate } from '@builder.io/qwik-city';
 
 interface Props {
   pokemonID: number;
   width?: number;
   height?: number;
   isFrontPicture?: boolean;
-  showPokemon?: boolean;
+  isVisible?: boolean;
 }
 
 export const PokemonPicture = component$(
@@ -15,11 +14,9 @@ export const PokemonPicture = component$(
     width = 200,
     height = 200,
     isFrontPicture = true,
-    showPokemon = false,
+    isVisible = false,
   }: Props) => {
-    const navigate = useNavigate();
     const imgIsLoaded = useSignal(false);
-    console.log('abc');
 
     const srcImg = isFrontPicture
       ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonID}.png`
@@ -42,15 +39,12 @@ export const PokemonPicture = component$(
           </div>
         )}
 
-        <picture
-          class="cursor-pointer"
-          onClick$={() => navigate(`/pokemon/${pokemonID}`)}
-        >
+        <picture>
           <img
             class={[
               {
                 hidden: !imgIsLoaded.value,
-                'brightness-0': !showPokemon,
+                'brightness-0': !isVisible,
               },
               'transition-all',
               'duration-500',
@@ -60,7 +54,6 @@ export const PokemonPicture = component$(
             width={width}
             height={height}
             onLoad$={() => {
-              console.log('hello');
               imgIsLoaded.value = true;
             }}
           />

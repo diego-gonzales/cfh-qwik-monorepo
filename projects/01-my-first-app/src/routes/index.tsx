@@ -1,11 +1,12 @@
 import { component$, useSignal, $, useTask$ } from '@builder.io/qwik';
-import type { DocumentHead } from '@builder.io/qwik-city';
+import { type DocumentHead, useNavigate } from '@builder.io/qwik-city';
 import { PokemonPicture } from '~/components/pokemon/pokemon-picture';
 
 export default component$(() => {
   const pokemonID = useSignal(1);
   const isFrontPicture = useSignal(true);
-  const showPokemon = useSignal(false);
+  const isVisible = useSignal(false);
+  const nav = useNavigate();
 
   const changePokemonID = $((numberValue: number) => {
     const newValue = pokemonID.value + numberValue;
@@ -15,16 +16,21 @@ export default component$(() => {
 
   useTask$(({ track }) => {
     track(() => pokemonID.value);
-    showPokemon.value = false;
+    isVisible.value = false;
   });
 
   return (
     <>
-      <PokemonPicture
-        pokemonID={pokemonID.value}
-        isFrontPicture={isFrontPicture.value}
-        showPokemon={showPokemon.value}
-      />
+      <div
+        class="cursor-pointer"
+        onClick$={() => nav(`/pokemon/${pokemonID.value}`)}
+      >
+        <PokemonPicture
+          pokemonID={pokemonID.value}
+          isFrontPicture={isFrontPicture.value}
+          isVisible={isVisible.value}
+        />
+      </div>
       <div class="my-2">
         <button
           class="btn btn-primary mx-1"
@@ -51,10 +57,10 @@ export default component$(() => {
         <button
           class="btn btn-primary mx-1"
           onClick$={() => {
-            showPokemon.value = !showPokemon.value;
+            isVisible.value = !isVisible.value;
           }}
         >
-          {showPokemon.value ? 'Hidde pokemon' : 'Show pokemon'}
+          {isVisible.value ? 'Hidde pokemon' : 'Show pokemon'}
         </button>
       </div>
     </>
